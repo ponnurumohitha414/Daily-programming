@@ -1,0 +1,25 @@
+def longest_equal_01(s):
+    mp = {0: -1}
+    curr_sum = 0
+    max_len = 0
+    start = 0
+
+    for i in range(len(s)):
+
+        curr_sum += 1 if s[i] == '1' else -1
+
+        if curr_sum in mp:
+            length = i - mp[curr_sum]
+
+            if length > max_len:
+                max_len = length
+                start = mp[curr_sum] + 1
+        else:
+            mp[curr_sum] = i
+
+    print("Length =", max_len)
+    print("Substring =", s[start:start + max_len])
+
+
+s = input("Enter binary string: ")
+longest_equal_01(s)
