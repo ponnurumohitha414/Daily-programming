@@ -1,0 +1,34 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    int N;
+    cin >> N;
+
+    vector<long long> X(N), P(N), prefix(N + 1, 0);
+
+    for (int i = 0; i < N; i++)
+        cin >> X[i];
+
+    for (int i = 0; i < N; i++) {
+        cin >> P[i];
+        prefix[i + 1] = prefix[i] + P[i];
+    }
+
+    int Q;
+    cin >> Q;
+
+    while (Q--) {
+        long long L, R;
+        cin >> L >> R;
+
+        int left = lower_bound(X.begin(), X.end(), L) - X.begin();
+        int right = upper_bound(X.begin(), X.end(), R) - X.begin();
+
+        cout << prefix[right] - prefix[left] << endl;
+    }
+
+    return 0;
+}
