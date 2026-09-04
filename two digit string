@@ -1,0 +1,84 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    static class Person {
+        long h, l;
+
+        Person(long h, long l) {
+            this.h = h;
+            this.l = l;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(
+                new InputStreamReader(System.in));
+
+        int N = Integer.parseInt(br.readLine());
+
+        Person[] people = new Person[N];
+
+        for (int i = 0; i < N; i++) {
+            StringTokenizer st =
+                    new StringTokenizer(br.readLine());
+
+            long H = Long.parseLong(st.nextToken());
+            long L = Long.parseLong(st.nextToken());
+
+            people[i] = new Person(H, L);
+        }
+
+        int Q = Integer.parseInt(br.readLine());
+
+        long[] T = new long[Q];
+
+        StringTokenizer st =
+                new StringTokenizer(br.readLine());
+
+        for (int i = 0; i < Q; i++) {
+            T[i] = Long.parseLong(st.nextToken());
+        }
+
+        // Process queries from largest T to smallest T
+        Integer[] order = new Integer[Q];
+
+        for (int i = 0; i < Q; i++) {
+            order[i] = i;
+        }
+
+        Arrays.sort(order, (a, b) ->
+                Long.compare(T[b], T[a]));
+
+        // Max heap for heights
+        PriorityQueue<Long> pq =
+                new PriorityQueue<>(Collections.reverseOrder());
+
+        long[] ans = new long[Q];
+
+        int j = N - 1;
+
+        for (int idx : order) {
+
+            long time = T[idx];
+
+            // Add people who are still in the room
+            while (j >= 0 && people[j].l > time) {
+                pq.add(people[j].h);
+                j--;
+            }
+
+            ans[idx] = pq.peek();
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < Q; i++) {
+            sb.append(ans[i]).append('\n');
+        }
+
+        System.out.print(sb);
+    }
+}
