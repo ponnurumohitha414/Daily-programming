@@ -1,0 +1,85 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    static int[] arr;
+    static int[] tree;
+
+    // Build the segment tree
+    static void build(int node, int start, int end) {
+        if (start == end) {
+            tree[node] = arr[start];
+            return;
+        }
+
+        int mid = (start + end) / 2;
+
+        build(2 * node, start, mid);
+        build(2 * node + 1, mid + 1, end);
+
+        tree[node] = Math.min(tree[2 * node], tree[2 * node + 1]);
+    }
+
+    // Find minimum in range [left, right]
+    static int query(int node, int start, int end, int left, int right) {
+
+        // Completely outside the range
+        if (right < start || end < left) {
+            return Integer.MAX_VALUE;
+        }
+
+        // Completely inside the range
+        if (left <= start && end <= right) {
+            return tree[node];
+        }
+
+        int mid = (start + end) / 2;
+
+        int leftMin = query(2 * node, start, mid, left, right);
+        int rightMin = query(2 * node + 1, mid + 1, end, left, right);
+
+        return Math.min(leftMin, rightMin);
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken());
+        int q = Integer.parseInt(st.nextToken());
+
+        arr = new int[n];
+
+        st = new StringTokenizer(br.readLine());
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
+        }
+
+        tree = new int[4 * n];
+
+        build(1, 0, n - 1);
+
+        StringBuilder output = new StringBuilder();
+
+        while (q-- > 0) {
+
+            st = new StringTokenizer(br.readLine());
+
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+
+            // Convert 1-based input to 0-based index
+            a--;
+            b--;
+
+            output.append(query(1, 0, n - 1, a, b))
+                  .append('\n');
+        }
+
+        System.out.print(output);
+    }
+}
