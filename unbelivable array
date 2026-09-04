@@ -1,0 +1,76 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(
+                new InputStreamReader(System.in)
+        );
+
+        int T = Integer.parseInt(br.readLine());
+
+        StringBuilder output = new StringBuilder();
+
+        for (int tc = 1; tc <= T; tc++) {
+
+            StringTokenizer st = new StringTokenizer(br.readLine());
+
+            int n = Integer.parseInt(st.nextToken());
+            int q = Integer.parseInt(st.nextToken());
+
+            int[] A = new int[n];
+
+            // Store the array
+            for (int i = 0; i < n; i++) {
+                A[i] = Integer.parseInt(st.nextToken());
+            }
+
+            // parent[x] tells the current replacement of x
+            int MAX = 100000;
+            int[] parent = new int[MAX + 1];
+
+            for (int i = 1; i <= MAX; i++) {
+                parent[i] = i;
+            }
+
+            output.append("Case ").append(tc).append(":\n");
+
+            while (q-- > 0) {
+
+                st = new StringTokenizer(br.readLine());
+
+                int type = Integer.parseInt(st.nextToken());
+
+                if (type == 1) {
+
+                    int x = Integer.parseInt(st.nextToken());
+                    int y = Integer.parseInt(st.nextToken());
+
+                    // Replace x with y
+                    for (int i = 1; i <= MAX; i++) {
+                        if (parent[i] == x) {
+                            parent[i] = y;
+                        }
+                    }
+
+                } else {
+
+                    int idx = Integer.parseInt(st.nextToken());
+
+                    int value = A[idx - 1];
+
+                    // Find the final/current value
+                    while (parent[value] != value) {
+                        value = parent[value];
+                    }
+
+                    output.append(value).append('\n');
+                }
+            }
+        }
+
+        System.out.print(output);
+    }
+}
