@@ -1,0 +1,42 @@
+import java.util.*;
+
+class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int t = sc.nextInt();
+
+        while (t-- > 0) {
+            int n = sc.nextInt();
+            int k = sc.nextInt();
+
+            int[] freq = new int[4 * n + 5];
+
+            for (int i = 0; i < n; i++) {
+                int x = sc.nextInt();
+                freq[x]++;
+            }
+
+            int operations = 0;
+
+            for (int x = 1; x < freq.length - 1; x++) {
+
+                while (freq[x] > k) {
+                    int move = freq[x] - 1;
+
+                    // Keep the first occurrence
+                    freq[x] = 1;
+
+                    // All remaining occurrences move to x + 1
+                    freq[x + 1] += move;
+
+                    operations++;
+                }
+            }
+
+            System.out.println(operations);
+        }
+
+        sc.close();
+    }
+}
