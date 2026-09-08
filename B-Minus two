@@ -1,0 +1,51 @@
+import java.util.*;
+
+class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int t = sc.nextInt();
+
+        while (t-- > 0) {
+
+            int n = sc.nextInt();
+
+            HashMap<Long, Integer> freq = new HashMap<>();
+
+            for (int i = 0; i < n; i++) {
+                long x = sc.nextLong();
+                freq.put(x, freq.getOrDefault(x, 0) + 1);
+            }
+
+            int answer = 0;
+
+            // Same numbers are always equal
+            for (int count : freq.values()) {
+                answer = Math.max(answer, count);
+            }
+
+            // Check pairs x and y where x + y is divisible by 4
+            ArrayList<Long> values = new ArrayList<>(freq.keySet());
+
+            for (int i = 0; i < values.size(); i++) {
+                long x = values.get(i);
+
+                for (int j = i + 1; j < values.size(); j++) {
+                    long y = values.get(j);
+
+                    if ((x + y) % 4 == 0) {
+                        answer = Math.max(
+                            answer,
+                            freq.get(x) + freq.get(y)
+                        );
+                    }
+                }
+            }
+
+            System.out.println(answer);
+        }
+
+        sc.close();
+    }
+}
