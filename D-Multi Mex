@@ -1,0 +1,123 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    static class FastScanner {
+        private final InputStream in = System.in;
+        private final byte[] buffer = new byte[1 << 16];
+        private int ptr = 0, len = 0;
+
+        private int read() throws IOException {
+            if (ptr >= len) {
+                len = in.read(buffer);
+                ptr = 0;
+                if (len <= 0) return -1;
+            }
+            return buffer[ptr++];
+        }
+
+        int nextInt() throws IOException {
+            int c;
+            do {
+                c = read();
+            } while (c <= ' ');
+
+            int sign = 1;
+            if (c == '-') {
+                sign = -1;
+                c = read();
+            }
+
+            int res = 0;
+            while (c > ' ') {
+                res = res * 10 + (c - '0');
+                c = read();
+            }
+            return res * sign;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        FastScanner fs = new FastScanner();
+        StringBuilder out = new StringBuilder();
+
+        int t = fs.nextInt();
+
+        while (t-- > 0) {
+            int n = fs.nextInt();
+
+            int[] a = new int[n];
+            int[] cnt = new int[3];
+
+            for (int i = 0; i < n; i++) {
+                a[i] = fs.nextInt();
+                if (a[i] <= 2) {
+                    cnt[a[i]]++;
+                }
+            }
+
+            /*
+             * To have a positive MEX, a group must contain 0.
+             *
+             * Since we have 3 groups, at least two groups need
+             * positive MEX values for the condition to hold when
+             * the maximum MEX is positive.
+             *
+             * We construct two groups A and B.
+             */
+
+            if (cnt[0] < 2) {
+                out.append("NO\n");
+                continue;
+            }
+
+            /*
+             * We want:
+             *
+             * mex(A) = x
+             * mex(B) = y
+             * mex(C) = 0
+             *
+             * and x + y >= max(x,y)*2
+             *
+             * This means x == y.
+             *
+             * The easiest useful case is to make both MEX = 1:
+             * put 0 in A and B, while putting no 1 in either.
+             *
+             * But if 1 exists, it must go somewhere, so put all 1s
+             * into C. Then C has mex 0.
+             *
+             * Thus A and B both have mex 1.
+             */
+
+            char[] ans = new char[n];
+
+            boolean firstZero = false;
+            boolean secondZero = false;
+
+            for (int i = 0; i < n; i++) {
+                if (a[i] == 0) {
+                    if (!firstZero) {
+                        ans[i] = 'A';
+                        firstZero = true;
+                    } else if (!secondZero) {
+                        ans[i] = 'B';
+                        secondZero = true;
+                    } else {
+                        ans[i] = 'C';
+                    }
+                } else {
+                    // Put every non-zero element into C.
+                    ans[i] = 'C';
+                }
+            }
+
+            out.append("YES\n");
+            out.append(new String(ans)).append('\n');
+        }
+
+        System.out.print(out);
+    }
+}
