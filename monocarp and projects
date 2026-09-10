@@ -1,0 +1,41 @@
+import java.util.*;
+
+class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int t = sc.nextInt();
+
+        while (t-- > 0) {
+            long x = sc.nextLong();
+            long y = sc.nextLong();
+            long k = sc.nextLong();
+
+            long d = y - x;
+            long ans = 0;
+
+            // If x == y, then d = 0, so every remainder is 0
+            if (d == 0) {
+                System.out.println(0);
+                continue;
+            }
+
+            // We only need to calculate while (x + i) <= d
+            long count = Math.min(k, d - x + 1);
+
+            for (long i = 0; i < count; i++) {
+                ans += d % (x + i);
+            }
+
+            // After x + i > d, remainder is always d
+            if (k > count) {
+                ans += (k - count) * d;
+            }
+
+            System.out.println(ans);
+        }
+
+        sc.close();
+    }
+}
+
